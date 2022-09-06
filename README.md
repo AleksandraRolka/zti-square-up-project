@@ -1,2 +1,2 @@
 # Square up!
-## Project for ZTI university course.
+Project for ZTI university course.
