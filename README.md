@@ -1,1 +1,2 @@
-# zti-square-up-project
+# Square up!
+## Project for ZTI university course.
