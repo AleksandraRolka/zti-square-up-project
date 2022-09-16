@@ -1,14 +1,18 @@
 package com.server.models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import java.sql.Timestamp;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.List;
 
 import static javax.persistence.GenerationType.AUTO;
 
+@Slf4j
 @Entity
 @Data
 @NoArgsConstructor
@@ -18,16 +22,39 @@ import static javax.persistence.GenerationType.AUTO;
 public class User {
     @Id @GeneratedValue(strategy = AUTO)
     private Long id;
+    @NotBlank
+    @Size(max=50)
     private String firstName;
+    @NotBlank
+    @Size(max=50)
     private String lastName;
+    @NotBlank
+    @Size(max=50)
     private String email;
-    @JsonProperty
+    @NotBlank
     private String password;
+    // @Size(max=250)
+    // private String avatar_url;
     @ManyToMany(fetch = FetchType.EAGER)
-//    @JoinTable(name = "user_roles",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Collection<Role> roles = new HashSet<>();
+    private Collection<Role> roles;
+    private String joinDate;
 
 
+    public User(String firstName, String lastName, String email, String password, Collection<Role> roles) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+        this.joinDate = (new Timestamp(System.currentTimeMillis()).toString());
+    }
+
+    public User(String firstName, String lastName, String email, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.roles = List.of( new Role(null, "ROLE_USER"));
+        this.joinDate = (new Timestamp(System.currentTimeMillis()).toString());
+    }
 }
