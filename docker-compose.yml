@@ -1,0 +1,25 @@
+version: "3.9"
+services:
+  frontend:
+    build:
+      context: ./client/square-up
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    networks:
+      - frontend
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge

@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.server.api.utils.CustomErrorMessage;
+import com.server.api.utils.UserSignUpJson;
 import com.server.models.Role;
 import com.server.models.User;
 import com.server.repository.UserRepository;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URI;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,11 +36,18 @@ public class AuthController {
     private final UserService userService;
     private final UserRepository userRepository;
 
-
     @PostMapping(path = "/signup")
-    public ResponseEntity<?> signUpUser(@RequestBody User user) {
-        if(userRepository.findByEmail(user.getEmail()) != null)
-            return ResponseEntity.badRequest().body(new CustomErrorMessage("User with this email alredy exists."));
+    public ResponseEntity<?> signUpUser(@RequestBody UserSignUpJson userData) {
+        if(userRepository.findByEmail(userData.getEmail()) != null)
+            return ResponseEntity.badRequest().body(new CustomErrorMessage("User with this email already exists."));
+
+        log.info(String.valueOf(userData));
+        User user = new User(
+                userData.getFirst_name(),
+                userData.getLast_name(),
+                userData.getEmail(),
+                userData.getPassword());
+        log.info(String.valueOf(user));
         userService.saveUser(user);
         return ResponseEntity.ok().build();
     }

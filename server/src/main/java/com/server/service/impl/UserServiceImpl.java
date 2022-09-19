@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User user = userRepository.findByEmail(email);
         if (user == null) {
             log.error("User not found in the database");
-            throw new UsernameNotFoundException(("User not found in database"));
+            throw new UsernameNotFoundException(("Incorrect data, user not found."));
         }
         log.info("User found in the database: {}", email);
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
@@ -52,10 +52,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setPassword(passwordEncoder.encode((user.getPassword())));
         log.info("Roleeeees: {}", user.getRoles());
         log.info("Roleeeees count: {}", user.getRoles().size());
-        if (user.getRoles().size() == 0)
-            addRoleToUser(user.getEmail(), "ROLE_USER");
         userRepository.save(user);
-        balanceService.addEmptyBalanceForUser(user.getId());
+        User userAdded = userRepository.findByEmail(user.getEmail());
+        if (userAdded != null) {
+            if (user.getRoles().size() == 0)
+                addRoleToUser(user.getEmail(), "ROLE_USER");
+            balanceService.addEmptyBalanceForUser(user.getId());
+        }
     }
 
     @Override
@@ -70,13 +73,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         log.info("Adding role {} to user {}", roleName, email);
         User user = userRepository.findByEmail(email);
         Role role = roleRepository.findByName(roleName);
-        if (role == null) {
+        if ((role == null) & (user != null)) {
             log.error("Role not exist. Creating new one");
             role = new Role(null, roleName);
             saveRole(role);
-        }
-        if (user != null)
             user.getRoles().add(role);
+        }
     }
 
     @Override

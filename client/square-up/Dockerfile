@@ -1,0 +1,8 @@
+FROM node:13.12.0-alpine
+WORKDIR ./square-up
+ENV PATH ./node_modules/.bin:$PATH
+
+COPY ["package*.json","."]
+RUN npm install --silent
+COPY . .
+CMD ["npm", "start", "--silent"]

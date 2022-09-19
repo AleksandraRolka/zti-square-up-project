@@ -33,8 +33,6 @@ public class User {
     private String email;
     @NotBlank
     private String password;
-    // @Size(max=250)
-    // private String avatar_url;
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles;
     private String joinDate;
@@ -54,7 +52,7 @@ public class User {
         this.lastName = lastName;
         this.email = email;
         this.password = password;
-        this.roles = List.of( new Role(null, "ROLE_USER"));
+        this.roles = List.of();
         this.joinDate = (new Timestamp(System.currentTimeMillis()).toString());
     }
 }

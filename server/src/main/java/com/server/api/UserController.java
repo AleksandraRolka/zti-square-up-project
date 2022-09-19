@@ -44,7 +44,7 @@ public class UserController {
         log.info("Fetch user by email: {}", obj.getEmail());
         User user = userService.getUser(obj.getEmail());
         if(user == null)
-            return ResponseEntity.badRequest().body(new CustomErrorMessage("User not exist!"));
+            return ResponseEntity.badRequest().body(new CustomErrorMessage("User does not exist!"));
         return ResponseEntity.ok().body(user);
     }
 
