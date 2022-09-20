@@ -28,16 +28,31 @@ public class DebtController {
     }
 
     @GetMapping(path = "/group/{group_id}/user/{user1_id}/{user2_id}/debt")
-    public ResponseEntity<?> getUserDebtsFromGroup(@PathVariable("group_id") Long group_id,
-                                                   @PathVariable("user_id") Long user_id) {
+    public ResponseEntity<?> getTwoUsersDebtsFromGroup(@PathVariable("group_id") Long group_id,
+                                                       @PathVariable("user1_id") Long user1_id,
+                                                   @PathVariable("user2_id") Long user2_id) {
+        if(groupRepository.findById(group_id).isEmpty())
+            return ResponseEntity.badRequest().body(new CustomErrorMessage("Group does not exists"));
+        if(userRepository.findById(user1_id).isEmpty())
+            return ResponseEntity.badRequest().body(new CustomErrorMessage("User not exist!")); {
+        }
+        if(userRepository.findById(user2_id).isEmpty())
+            return ResponseEntity.badRequest().body(new CustomErrorMessage("User not exist!")); {
+        }
+        return ResponseEntity.ok().body(debtService.getByGroupIdAndUsersIds(group_id,user1_id,user2_id));
+    }
+
+    @GetMapping(path = "/group/{group_id}/user/{user_id}/debt")
+    public ResponseEntity<?> getTwoUsersDebtsFromGroup(@PathVariable("group_id") Long group_id,
+                                                       @PathVariable("user_id") Long user_id) {
         if(groupRepository.findById(group_id).isEmpty())
             return ResponseEntity.badRequest().body(new CustomErrorMessage("Group does not exists"));
         if(userRepository.findById(user_id).isEmpty())
             return ResponseEntity.badRequest().body(new CustomErrorMessage("User not exist!")); {
         }
-        ResponseEntity.badRequest().body(new CustomErrorMessage("Can not get group details. Group does not exists"));
-        return null;
+        return ResponseEntity.ok().body(debtService.getByGroupIdAndUserId(group_id,user_id));
     }
+
 
     @PutMapping(path = "/debt/update")
     public ResponseEntity<?> updateUsersDebt(@RequestBody Debt debt) {

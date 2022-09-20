@@ -37,4 +37,7 @@ public interface DebtRepository extends JpaRepository<Debt, Long> {
     @Query(value = "UPDATE Debt SET first_user_id=?2, second_user_id=?3, balance=?4  WHERE group_id = ?1 AND first_user_id=?2 AND second_user_id=?3",
             nativeQuery = true)
     void updateByGroupIdAndFirstUserIdAndSecondUserId(Long groupId, Long firstUserId, Long secondUserId, Double amount);
+
+    Collection<Debt> findByGroupIdAndFirstUserId(Long group_id, Long user_id);
+
 }

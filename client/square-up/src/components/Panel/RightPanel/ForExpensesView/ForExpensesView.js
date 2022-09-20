@@ -48,14 +48,14 @@ const ForExpensesView = () => {
                     <>
                         <p className="balance-header green">YOU ARE OWED</p>
                         <p className="balance-amount green">
-                            {"PLN " + totalBalance.toPrecision(3)}
+                            {"PLN " + totalBalance.toFixed(2)}
                         </p>
                     </>
                 ) : totalBalance < 0 ? (
                     <>
                         <p className="balance-header orange">YOU OWES</p>
                         <p className="balance-amount orange">
-                            {"PLN " + -totalBalance.toPrecision(3)}
+                            {"PLN " + -totalBalance.toFixed(2)}
                         </p>
                     </>
                 ) : (

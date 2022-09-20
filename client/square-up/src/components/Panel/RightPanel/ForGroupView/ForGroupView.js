@@ -11,6 +11,7 @@ const ForGroupView = () => {
     const [currGroupId, setCurrGroupId] = useState();
     const [currPath, setCurrPath] = useState("");
     const [groupMembers, setGroupMembers] = useState([]);
+    const [allUserDebts, setAllUserDebts] = useState([]);
 
     let user = getCurrentUser();
     let path = useLocation().pathname;
@@ -20,6 +21,7 @@ const ForGroupView = () => {
         setCurrPath(path);
         setCurrGroupId(path.substring("group/".length + 1));
         fetchGroupInfo();
+        fetchAllUserDebts();
     }, [window.location.pathname]);
 
     function fetchGroupInfo() {
@@ -43,9 +45,54 @@ const ForGroupView = () => {
             });
     }
 
+    function fetchAllUserDebts() {
+        axios({
+            method: "get",
+            url: `api/group/${currGroupId}/user/${user.user_id}/debt`,
+            headers: config(),
+        })
+            .then((res) => {
+                setAllUserDebts(res.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    function getDebtBetweenCurrUserAndUserId(id) {
+        if (allUserDebts.length > 0) {
+            let debt = allUserDebts.filter((debt) => {
+                return debt.secondUserId == id;
+            });
+            if (debt) return debt.at(0).balance.toFixed(2);
+        }
+    }
+
+    function debtBetweenInfo(id) {
+        const debt = getDebtBetweenCurrUserAndUserId(id);
+        if (debt == 0.0) {
+            return <p className="debt-info blue">{"SQUARED UP"}</p>;
+        } else if (debt > 0.0) {
+            return (
+                <p className="debt-info green">
+                    {"OWES YOU:  " + debt + " PLN"}
+                </p>
+            );
+        } else if (debt > 0.0) {
+            return (
+                <p className="debt-info orange">
+                    {"YOU OWED:  " + debt + " PLN"}
+                </p>
+            );
+        } else {
+            return <p></p>;
+        }
+    }
+
     useEffect(() => {
         user = getCurrentUser();
         fetchGroupInfo();
+        fetchAllUserDebts();
     }, []);
 
     return (
@@ -54,16 +101,25 @@ const ForGroupView = () => {
             <ul>
                 {groupMembers.map((member) => {
                     return (
-                        <li>
-                            <>
-                                <span className="p-fullname">
-                                    {member.firstName + " " + member.lastName}
-                                </span>
-                                <span className="p-email">
-                                    {" " + member.email}
-                                </span>
-                            </>
-                        </li>
+                        <>
+                            <li>
+                                <>
+                                    <span className="p-fullname">
+                                        {member.firstName +
+                                            " " +
+                                            member.lastName}
+                                    </span>
+                                    <span className="p-email">
+                                        {" " + member.email}
+                                    </span>
+                                </>
+                            </li>
+                            {member.id != user.user_id ? (
+                                <p>{debtBetweenInfo(member.id)}</p>
+                            ) : (
+                                <></>
+                            )}
+                        </>
                     );
                 })}
             </ul>

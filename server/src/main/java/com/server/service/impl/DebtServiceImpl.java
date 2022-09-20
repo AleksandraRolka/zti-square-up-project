@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collection;
 import java.util.Optional;
 
 import static java.lang.Math.abs;
@@ -54,6 +55,11 @@ public class DebtServiceImpl implements DebtService {
             balanceService.setUserBalance( secondUserId,  (abs(currentUsersDebtBetween.getBalance()) - amount),(abs(currentUsersDebtBetween.getBalance() + amount)));
         }
         return updatedUsersDebtBetween;
+    }
+
+    @Override
+    public Collection<Debt> getByGroupIdAndUserId(Long group_id, Long user_id) {
+        return debtRepository.findByGroupIdAndFirstUserId(group_id, user_id);
     }
 
 

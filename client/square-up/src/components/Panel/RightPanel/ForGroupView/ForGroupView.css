@@ -16,3 +16,21 @@
     color: rgb(186, 187, 187);
     font-size: 13px;
 }
+
+.debt-info {
+    color: rgb(186, 187, 187);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.orange {
+    color: rgb(255, 119, 0);
+}
+
+.green {
+    color: rgb(0, 186, 124);
+}
+
+.blue {
+    color: rgb(159, 190, 248);
+}

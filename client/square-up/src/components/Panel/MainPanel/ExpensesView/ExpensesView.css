@@ -1,3 +1,65 @@
+.expense-date-col {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.expense-date {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgb(161, 161, 161);
+    padding-top: 6px;
+}
+
 .expense-title {
-    font-weight: 500;
+    font-weight: 600;
+}
+
+.group-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgb(138, 198, 178);
+}
+
+.expense-description {
+    font-size: 13px;
+    color: rgb(144, 142, 142);
+}
+
+.paid-by-info,
+.lent-by-info {
+    font-size: 11px;
+    color: rgb(144, 142, 142);
+    font-weight: 600;
+    margin-top: 25px;
+}
+
+.paid-by-amount,
+.lent-by-amount {
+    font-size: 14px;
+    color: rgb(1, 1, 1);
+    font-weight: 600;
+}
+
+.paid-by-amount,
+.paid-by-info {
+    text-align: right;
+}
+
+.lent-by-amount,
+.lent-by-info {
+    text-align: left;
+}
+
+.expense-row {
+    background-color: rgb(246, 247, 248);
+    padding-top: 10px;
+    padding-bottom: 0px;
+}
+
+.orange {
+    color: rgb(255, 119, 0);
+}
+
+.green {
+    color: rgb(0, 186, 124);
 }

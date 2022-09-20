@@ -14,11 +14,15 @@ import ListGroup from "react-bootstrap/ListGroup";
 const ExpensesView = () => {
     const [allExpenses, setAllExpenses] = useState([]);
     const [allUserRelatedExpenses, setAllUserRelatedExpenses] = useState([]);
+    const [allUsers, setAllUsers] = useState([]);
+    const [allGroups, setAllGroups] = useState([]);
     let user = getCurrentUser();
 
     useEffect(() => {
         user = getCurrentUser();
         fetchAllUserExpenses();
+        fetchGroups();
+        fetchAllUsers();
     }, []);
 
     function fetchAllUserExpenses() {
@@ -41,25 +45,92 @@ const ExpensesView = () => {
                             userRelatedExpenses.push(expense);
                         }
                     } else {
-                        if (
-                            expense.splitDetails.some((share) => {
-                                return (
-                                    share.whoPaidId == user.user_id ||
-                                    share.whoOwesId == user.user_id
-                                );
-                            })
-                        ) {
+                        let flag = false;
+                        expense.splitDetails.forEach((share) => {
+                            if (
+                                share.whoPaidId == user.user_id ||
+                                share.whoOwesId == user.user_id
+                            )
+                                flag = true;
+                        });
+                        if (flag) {
                             userRelatedExpenses.push(expense);
                         }
                     }
                 });
-                console.log("all expenses: ", expenses);
-                console.log("userRelatedExpenses: ", userRelatedExpenses);
                 setAllUserRelatedExpenses(userRelatedExpenses);
             })
             .catch((error) => {
                 console.log(error);
             });
+    }
+
+    function fetchAllUsers() {
+        axios({
+            method: "get",
+            url: `api/users`,
+            headers: config(),
+        })
+            .then((res) => {
+                let users = res.data;
+                setAllUsers(users);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    function getUserInfo(id) {
+        return allUsers.filter((user) => {
+            return user.id == id;
+        })[0];
+    }
+
+    function getGroupInfo(id) {
+        console.log(allGroups);
+        return allGroups.filter((user) => {
+            return user.id == id;
+        })[0];
+    }
+
+    function fetchGroups() {
+        axios({
+            method: "get",
+            url: `api/groups/`,
+            headers: config(),
+        })
+            .then((res) => {
+                setAllGroups(res.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    function getAllAmountLentByUser(userId, expense) {
+        let sum = 0.0;
+        expense.splitDetails.forEach((share) => {
+            if (share.whoPaidId == userId) sum = sum + share.amount;
+        });
+        return sum.toFixed(2);
+    }
+
+    function getAmountLentByUser(userId, expense) {
+        let sum = 0.0;
+        expense.splitDetails.forEach((share) => {
+            if (share.whoOwesId == userId) sum = sum + share.amount;
+        });
+        return sum.toFixed(2);
+    }
+
+    function makePaymentDescription(fromUserId, toUserId) {
+        let from =
+            fromUserId == user.user_id
+                ? "You"
+                : getUserInfo(fromUserId).firstName;
+        let to =
+            toUserId == user.user_id ? "you" : getUserInfo(toUserId).firstName;
+        return from + " transfered money to " + to + ".";
     }
 
     return (
@@ -98,7 +169,135 @@ const ExpensesView = () => {
                 <br />
                 {allUserRelatedExpenses.map((expense) => (
                     <ListGroup.Item>
-                        <p className="expense-title">{expense.title}</p>
+                        <Container>
+                            <Row className="expense-row">
+                                <Col>
+                                    <Row>
+                                        <Col className="expense-date-col">
+                                            <p className="expense-date">
+                                                {
+                                                    expense.createdAt.split(
+                                                        " "
+                                                    )[0]
+                                                }
+                                            </p>
+                                        </Col>
+                                        <Col xs={10}>
+                                            <span className="group-name">
+                                                {
+                                                    getGroupInfo(
+                                                        expense.groupId
+                                                    ).name
+                                                }
+                                            </span>
+                                            <p className="expense-title">
+                                                {expense.title}
+                                            </p>
+                                            <p className="expense-description">
+                                                {expense.isItPayment
+                                                    ? makePaymentDescription(
+                                                          expense.paymentDetails
+                                                              .fromUserId,
+                                                          expense.paymentDetails
+                                                              .toUserId
+                                                      )
+                                                    : expense.description}
+                                            </p>
+                                        </Col>
+                                    </Row>
+                                </Col>
+                                <Col md="auto">
+                                    {expense.paidBy == user.user_id ? (
+                                        <>
+                                            {expense.isItPayment ? (
+                                                <>
+                                                    <p> </p>
+                                                    <br />
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <p className="paid-by-info">
+                                                        You paid
+                                                    </p>
+                                                    <p className="paid-by-amount">
+                                                        {parseFloat(
+                                                            expense.amount
+                                                        ).toFixed(2)}
+                                                    </p>
+                                                </>
+                                            )}
+                                        </>
+                                    ) : (
+                                        <>
+                                            {expense.isItPayment ? (
+                                                <>
+                                                    <p> </p>
+                                                    <br />
+                                                </>
+                                            ) : (
+                                                <p className="paid-by-info">
+                                                    {
+                                                        getUserInfo(
+                                                            expense.paidBy
+                                                        ).firstName
+                                                    }{" "}
+                                                    paid
+                                                </p>
+                                            )}
+                                            <p className="paid-by-amount">
+                                                {parseFloat(
+                                                    expense.amount
+                                                ).toFixed(2)}
+                                            </p>
+                                        </>
+                                    )}
+                                </Col>
+                                <Col xs lg="2">
+                                    {expense.paidBy == user.user_id ? (
+                                        <>
+                                            {expense.isItPayment ? (
+                                                <p> </p>
+                                            ) : (
+                                                <>
+                                                    <p className="lent-by-info">
+                                                        You lent
+                                                    </p>
+                                                    <p className="lent-by-amount green">
+                                                        {getAllAmountLentByUser(
+                                                            user.user_id,
+                                                            expense
+                                                        )}
+                                                    </p>
+                                                </>
+                                            )}
+                                        </>
+                                    ) : (
+                                        <>
+                                            {expense.isItPayment ? (
+                                                <p> </p>
+                                            ) : (
+                                                <>
+                                                    <p className="lent-by-info">
+                                                        {
+                                                            getUserInfo(
+                                                                expense.paidBy
+                                                            ).firstName
+                                                        }{" "}
+                                                        lent you
+                                                    </p>
+                                                    <p className="lent-by-amount orange">
+                                                        {getAmountLentByUser(
+                                                            user.user_id,
+                                                            expense
+                                                        )}
+                                                    </p>
+                                                </>
+                                            )}
+                                        </>
+                                    )}
+                                </Col>
+                            </Row>
+                        </Container>
                     </ListGroup.Item>
                 ))}
             </ListGroup>
