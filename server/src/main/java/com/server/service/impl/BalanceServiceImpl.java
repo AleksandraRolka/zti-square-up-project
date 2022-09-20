@@ -23,10 +23,24 @@ public class BalanceServiceImpl implements BalanceService {
     }
 
     public void updateUserBalance(Long userId, Double oweAmount, Double owedAmount) {
+        log.info("Updating balance..");
         Balance currentBalance = findByUserId(userId);
-        balanceRepository.updateUserBalance(userId, currentBalance.getOweAmount() + oweAmount,
+        log.info("To add oweAmount: {}", oweAmount);
+        log.info("Current oweAmount: {}", currentBalance.getOweAmount() );
+        log.info("To add owedAmount: {}", owedAmount);
+        log.info("Current owedAmount: {}", currentBalance.getOwedAmount() );
+        balanceRepository.updateUserBalance(userId,
+                currentBalance.getOweAmount() + oweAmount,
                 currentBalance.getOwedAmount()  + owedAmount,
                 (currentBalance.getOwedAmount()  + owedAmount)-(currentBalance.getOweAmount() + oweAmount));
+    }
+
+    public void setUserBalance(Long userId, Double oweAmount, Double owedAmount) {
+        log.info("Setting updated balance..");
+        balanceRepository.updateUserBalance(userId,
+                oweAmount,
+                owedAmount,
+                (owedAmount - oweAmount));
     }
 
     public Balance findByUserId(Long id) {

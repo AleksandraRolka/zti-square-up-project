@@ -1,0 +1,35 @@
+.dashboard-right-panel-header {
+    padding: 21px 10px 20px;
+    color: rgb(162, 162, 162);
+    min-height: 57px;
+    font-weight: 600;
+    font-size: 17px;
+    margin-bottom: 0px;
+    text-decoration: underline;
+}
+
+.userdata-info-div {
+    margin-top: 0px;
+    padding-left: 10px;
+    color: rgb(193, 193, 193);
+    line-height: 8px;
+    font-weight: 600;
+}
+
+.balance-header {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.balance-amount {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.orange {
+    color: rgb(255, 119, 0);
+}
+
+.green {
+    color: rgb(0, 186, 124);
+}

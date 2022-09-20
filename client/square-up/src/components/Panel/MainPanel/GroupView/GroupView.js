@@ -10,22 +10,44 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
+import ListGroup from "react-bootstrap/ListGroup";
 
 const GroupView = () => {
     const [currGroupName, setCurrGroupName] = useState("");
     const [currGroupId, setCurrGroupId] = useState();
     const [currPath, setCurrPath] = useState("");
     const [groupMembers, setGroupMembers] = useState();
-
+    const [allExpenses, setAllExpenses] = useState([]);
+    const [allGroupRelatedExpenses, setAllGroupRelatedExpenses] = useState([]);
     let user = getCurrentUser();
     let path = useLocation().pathname;
 
-    useEffect(() => {
-        path = window.location.pathname;
-        setCurrPath(path);
-        setCurrGroupId(path.substring("group/".length + 1));
-        fetchGroupInfo();
-    }, [window.location.pathname]);
+    function fetchAllUserExpenses() {
+        user = getCurrentUser();
+        axios({
+            method: "get",
+            url: `api/expense/get/all`,
+            headers: config(),
+        })
+            .then((res) => {
+                let expenses = res.data;
+                let groupRelatedExpenses = [];
+                setAllExpenses(expenses);
+                expenses.forEach((expense) => {
+                    path = window.location.pathname;
+                    const currentGroupId = path.substring("group/".length + 1);
+                    if (expense.groupId == currentGroupId) {
+                        groupRelatedExpenses.push(expense);
+                    }
+                });
+                console.log("all expenses: ", expenses);
+                console.log("userRelatedExpenses: ", groupRelatedExpenses);
+                setAllGroupRelatedExpenses(groupRelatedExpenses);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
 
     function fetchGroupInfo() {
         path = window.location.pathname;
@@ -52,6 +74,14 @@ const GroupView = () => {
         user = getCurrentUser();
         fetchGroupInfo();
     }, []);
+
+    useEffect(() => {
+        path = window.location.pathname;
+        setCurrPath(path);
+        setCurrGroupId(path.substring("group/".length + 1));
+        fetchGroupInfo();
+        fetchAllUserExpenses();
+    }, [window.location.pathname]);
 
     return (
         <>
@@ -84,6 +114,15 @@ const GroupView = () => {
                     </Row>
                 </Container>
             </div>
+
+            <ListGroup variant="flush">
+                <br />
+                {allGroupRelatedExpenses.map((expense) => (
+                    <ListGroup.Item>
+                        <p className="expense-title">{expense.title}</p>
+                    </ListGroup.Item>
+                ))}
+            </ListGroup>
         </>
     );
 };

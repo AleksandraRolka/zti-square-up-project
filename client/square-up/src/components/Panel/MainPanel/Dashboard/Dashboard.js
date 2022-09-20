@@ -74,21 +74,27 @@ const Dashboard = () => {
                 <Row>
                     <Col className="square border sum-up-content">
                         <p>you owe</p>
-                        <p className="sum-up-amount-owe">
-                            {oweAmount.toPrecision(3)}
+                        <p className="sum-up-amount-owe orange">
+                            {"PLN " + oweAmount.toPrecision(3)}
                         </p>
                     </Col>
                     <Col className="square border sum-up-content">
                         <p>you are owed</p>
-                        <p className="sum-up-amount-owed">
-                            {owedAmount.toPrecision(3)}
+                        <p className="sum-up-amount-owed green">
+                            {"PLN " + owedAmount.toPrecision(3)}
                         </p>
                     </Col>
                     <Col className="square border sum-up-content">
                         <p>total balance</p>
-                        <p className="sum-up-amount-total">
-                            {totalBalance.toPrecision(3)}
-                        </p>
+                        {totalBalance < 0 ? (
+                            <p className="sum-up-amount-total orange">
+                                {"PLN " + totalBalance.toPrecision(3)}
+                            </p>
+                        ) : (
+                            <p className="sum-up-amount-total green">
+                                {"PLN " + totalBalance.toPrecision(3)}
+                            </p>
+                        )}
                     </Col>
                 </Row>
             </Container>

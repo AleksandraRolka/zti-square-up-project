@@ -15,6 +15,7 @@ const LeftPanel = ({ user }) => {
     user = getCurrentUser();
 
     function fetchUserGroups() {
+        user = getCurrentUser();
         axios({
             method: "get",
             url: `api/user/${user.user_id}/groups`,

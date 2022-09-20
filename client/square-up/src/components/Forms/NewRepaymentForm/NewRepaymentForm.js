@@ -66,12 +66,12 @@ const NewRepaymentForm = () => {
             description: "",
             group_id: selectedGroup,
             paid_by: currUser.user_id,
-            amount: selectedAmount,
+            amount: Math.abs(selectedAmount),
             is_it_payment: true,
             payment_details: {
                 from_user_id: currUser.user_id,
                 to_user_id: selectedUser,
-                amount: selectedAmount,
+                amount: Math.abs(selectedAmount),
                 group_id: selectedGroup,
             },
             split_details: [],
@@ -143,7 +143,13 @@ const NewRepaymentForm = () => {
                         <option value={-100}>-</option>
                         {groupMembers.map((member) => (
                             <option key={`m-${member.id}`} value={member.id}>
-                                {member.firstName}
+                                {
+                                    member.firstName + " " + member.lastName
+                                    // +
+                                    // " (" +
+                                    // member.email +
+                                    // ")"
+                                }
                             </option>
                         ))}
                         ;

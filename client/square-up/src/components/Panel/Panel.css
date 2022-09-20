@@ -52,3 +52,11 @@
     border-color: rgb(45, 251, 183) !important;
     color: white !important;
 }
+
+.orange {
+    color: rgb(255, 119, 0);
+}
+
+.green {
+    color: rgb(0, 186, 124);
+}

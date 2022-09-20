@@ -109,18 +109,8 @@ public class ExpenseServiceImpl implements ExpenseService {
                     paymentDetails.getAmount(),
                     0.0);
 
-            log.info("paymentDetails.getGroupId(): {}", paymentDetails.getGroupId());
-            log.info("paymentDetails.getFromUserId(): {}", paymentDetails.getFromUserId());
-            log.info("paymentDetails.getToUserId(): {}", paymentDetails.getToUserId());
-            log.info("paymentDetails.getAmount(): {}", paymentDetails.getAmount());
-            log.info("-----------------------------");
             Debt usersDebtBetween = debtService.getByGroupIdAndUsersIds(paymentDetails.getGroupId(), paymentDetails.getFromUserId(), paymentDetails.getToUserId());
-            log.info("Current usersDebtBetween: {]", String.valueOf(usersDebtBetween));
-            log.info("paymentDetails.getGroupId(): {}", paymentDetails.getGroupId());
-            log.info("usersDebtBetween.getFirstUserId(): {}", usersDebtBetween.getFirstUserId());
-            log.info("usersDebtBetween.getSecondUserId(): {}", usersDebtBetween.getSecondUserId());
-            log.info("paymentDetails.getAmount(): {}", paymentDetails.getAmount());
-            debtRepository.updateByGroupIdAndFirstUserIdAndSecondUserId(paymentDetails.getGroupId(),
+            debtService.updateByGroupIdAndUsersIds(paymentDetails.getGroupId(),
                     usersDebtBetween.getFirstUserId(),
                     usersDebtBetween.getSecondUserId(),
                     paymentDetails.getAmount());
@@ -135,7 +125,11 @@ public class ExpenseServiceImpl implements ExpenseService {
                         share.getAmount(),
                         0.0);
                 Debt usersDebt = debtService.getByGroupIdAndUsersIds(share.getGroupId(), share.getWhoPaidId(), share.getWhoOwesId());
-                debtRepository.updateByGroupIdAndFirstUserIdAndSecondUserId(share.getGroupId(),
+                if(usersDebt == null) {
+                    debtRepository.save(new Debt(share.getWhoPaidId(), share.getWhoOwesId(), share.getGroupId()));
+                    usersDebt = debtService.getByGroupIdAndUsersIds(share.getGroupId(), share.getWhoPaidId(), share.getWhoOwesId());
+                }
+                debtService.updateByGroupIdAndUsersIds(share.getGroupId(),
                         usersDebt.getFirstUserId(),
                         usersDebt.getSecondUserId(),
                         share.getAmount());
