@@ -1,0 +1,18 @@
+.group-right-panel-header {
+    padding: 21px 10px 5px;
+    color: rgb(19, 226, 157);
+    min-height: 57px;
+    font-weight: 600;
+    font-size: 17px;
+}
+
+.p-fullname {
+    font-weight: 500;
+    color: rgb(101, 101, 101);
+    font-size: 15px;
+}
+
+.p-email {
+    color: rgb(186, 187, 187);
+    font-size: 13px;
+}

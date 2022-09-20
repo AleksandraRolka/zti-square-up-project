@@ -13,7 +13,6 @@ const MainPanel = () => {
 
     useEffect(() => {
         const path = window.location.pathname;
-        console.log(path);
         setCurrPath(path);
     }, [window.location.pathname]);
 

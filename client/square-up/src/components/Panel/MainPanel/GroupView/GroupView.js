@@ -19,6 +19,7 @@ const GroupView = () => {
         path = window.location.pathname;
         setCurrPath(path);
         setCurrGroupId(path.substring("group/".length + 1));
+        fetchGroupInfo();
     }, [window.location.pathname]);
 
     function fetchGroupInfo() {
@@ -33,10 +34,9 @@ const GroupView = () => {
         })
             .then((res) => {
                 let groupInfo = res.data;
-                console.log(groupInfo);
                 setCurrGroupId(groupInfo.id);
                 setCurrGroupName(groupInfo.name);
-                setGroupMembers(groupInfo.groupMembers);
+                setGroupMembers(groupInfo.members);
             })
             .catch((error) => {
                 console.log(error);

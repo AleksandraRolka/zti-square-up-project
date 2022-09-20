@@ -18,6 +18,8 @@ import {
     refetchUserInfoIfLost,
 } from "./services/auth-service.js";
 import NewGroupForm from "./components/Forms/NewGroupForm/NewGroupForm";
+import NewRepaymentForm from "./components/Forms/NewRepaymentForm/NewRepaymentForm";
+import NewExpenseForm from "./components/Forms/NewExpenseForm/NewExpenseForm";
 
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -109,6 +111,28 @@ function App() {
                     path="/addgroup"
                     element={
                         isAuthenticated ? <NewGroupForm /> : <Redirect to="/" />
+                    }
+                />
+                <Route
+                    exact
+                    path="/addexpense"
+                    element={
+                        isAuthenticated ? (
+                            <NewExpenseForm />
+                        ) : (
+                            <Redirect to="/" />
+                        )
+                    }
+                />
+                <Route
+                    exact
+                    path="/settleup"
+                    element={
+                        isAuthenticated ? (
+                            <NewRepaymentForm />
+                        ) : (
+                            <Redirect to="/" />
+                        )
                     }
                 />
             </Routes>

@@ -2,9 +2,6 @@ import React from "react";
 import "./ForDashboard.css";
 import { useEffect, useState } from "react";
 import { getCurrentUser } from "../../../../services/auth-service";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import axios from "axios";
 import { config } from "../../../../services/header-service";
 
@@ -14,6 +11,7 @@ const ForDashboard = () => {
     const [oweAmount, setOweAmount] = useState(0.0);
     const [owedAmount, setOwedAmount] = useState(0.0);
     const [totalBalance, setTotalBalance] = useState(0.0);
+    const [currentUser, setCurrentUser] = useState();
 
     function fetchUserBalance() {
         axios({
@@ -22,7 +20,6 @@ const ForDashboard = () => {
             headers: config(),
         })
             .then((res) => {
-                console.log(res.data);
                 let userBalance = res.data;
                 setOweAmount(userBalance.oweAmount);
                 setOwedAmount(userBalance.owedAmount);
@@ -35,12 +32,18 @@ const ForDashboard = () => {
 
     useEffect(() => {
         user = getCurrentUser();
+        console.log(user);
+        setCurrentUser(user);
         fetchUserBalance();
     }, []);
 
     return (
         <>
-            <h5>ForDashboard</h5>
+            <p className="dashboard-right-panel-header">Profile:</p>
+            <div className="userdata-info-div">
+                <p>{user.first_name + " " + user.last_name}</p>
+                <p>{user.email}</p>
+            </div>
         </>
     );
 };

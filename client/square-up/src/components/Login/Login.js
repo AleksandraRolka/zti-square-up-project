@@ -47,10 +47,11 @@ const Login = ({}) => {
                         data: { email: currentUserEmail },
                     })
                         .then((res) => {
+                            console.log(res.data);
                             let currentUserData = {
                                 user_id: res.data.id,
                                 first_name: res.data.firstName,
-                                last_name: res.data.LastName,
+                                last_name: res.data.lastName,
                                 email: res.data.email,
                                 roles: res.data.roles,
                             };

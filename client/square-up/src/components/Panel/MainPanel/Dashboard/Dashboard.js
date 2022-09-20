@@ -7,6 +7,8 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import axios from "axios";
 import { config } from "../../../../services/header-service";
+import Button from "react-bootstrap/Button";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
     // const [currPath, setCurrPath] = useState("");
@@ -22,7 +24,6 @@ const Dashboard = () => {
             headers: config(),
         })
             .then((res) => {
-                console.log(res.data);
                 let userBalance = res.data;
                 setOweAmount(userBalance.oweAmount);
                 setOwedAmount(userBalance.owedAmount);
@@ -41,7 +42,33 @@ const Dashboard = () => {
     return (
         <>
             <div className="main-panel-header">
-                <h5>Dashboard</h5>
+                <Container>
+                    <Row>
+                        <Col>
+                            <h5>Dashboard</h5>
+                        </Col>
+                        <Col md="auto">
+                            <Button
+                                className="main-dashboard-button button-add-expense"
+                                variant="warning"
+                                as={Link}
+                                to={`/addexpense`}
+                            >
+                                Add expense
+                            </Button>
+                        </Col>
+                        <Col xs lg="2">
+                            <Button
+                                className="main-dashboard-button button-settle-up"
+                                variant="info"
+                                as={Link}
+                                to={`/settleup`}
+                            >
+                                Settle up
+                            </Button>
+                        </Col>
+                    </Row>
+                </Container>
             </div>
             <Container>
                 <Row>
