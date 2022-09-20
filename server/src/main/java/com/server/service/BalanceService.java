@@ -5,7 +5,7 @@ import com.server.models.Balance;
 public interface BalanceService {
 
     public void addEmptyBalanceForUser(Long userId);
-    public void updateUserBalance(Long userId, Double oweAmount, Double owedAmount, Double totalBalance);
+    public void updateUserBalance(Long userId, Double oweAmount, Double owedAmount);
     public Balance findByUserId(Long id);
 
     public Balance getByUserId(Long userId);

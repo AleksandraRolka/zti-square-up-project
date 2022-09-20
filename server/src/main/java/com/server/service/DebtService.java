@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface DebtService {
 
     public Balance getByUserId(Long userId);
-    public Optional<Debt> getByUserAndGroupId(Long groupId, Long userId);
+    public Debt getByGroupIdAndUsersIds(Long groupId, Long firstUserId, Long secondUserId);
 }

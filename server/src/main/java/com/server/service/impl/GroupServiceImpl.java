@@ -34,13 +34,16 @@ public class GroupServiceImpl implements GroupService {
         }
         groupRepository.save(group);
         Collection<User> users = group.getMembers();
-        if(!(users.size() > 1)) {
+        if((users.size() > 1)) {
             log.info("Creating 0.00 debt beetween users in new group.");
             users.forEach( user1 -> {
                 for (User user2 : users) {
                     if (user1.getId() != user2.getId())
-                        if (debtRepository.findByAllAtributes(user1.getId(), user2.getId(),group.getId()).isEmpty())
+                        log.info("Create group ---> adding debt beetween, current: ", debtRepository.findByGroupIdAndFirstUserIdAndSecondUserId(user1.getId(), user2.getId(),group.getId()));
+                        if (debtRepository.findByGroupIdAndFirstUserIdAndSecondUserId(user1.getId(), user2.getId(),group.getId()) == null) {
+                            log.info("Create debt in group {} between users: {} <---> {}", user1.getId(), user2.getId());
                             debtRepository.save(new Debt(user1.getId(), user2.getId(), group.getId()));
+                        }
                 }
             });
         }
@@ -56,12 +59,12 @@ public class GroupServiceImpl implements GroupService {
         Group group = new Group(obj.getName(), members);
         groupRepository.save(group);
         Collection<User> users = group.getMembers();
-        if(!(users.size() > 1)) {
+        if((users.size() > 1)) {
             log.info("Creating 0.00 debt beetween users in new group.");
             users.forEach( user1 -> {
                 for (User user2 : users) {
                     if (user1.getId() != user2.getId())
-                        if (debtRepository.findByAllAtributes(user1.getId(), user2.getId(),group.getId()).isEmpty())
+                        if (debtRepository.findByGroupIdAndFirstUserIdAndSecondUserId(user1.getId(), user2.getId(),group.getId()) == null)
                             debtRepository.save(new Debt(user1.getId(), user2.getId(), group.getId()));
                 }
             });
@@ -90,7 +93,7 @@ public class GroupServiceImpl implements GroupService {
             users.forEach( user1 -> {
                 for (User user2 : users) {
                     if (user1.getId() != user2.getId())
-                        if (debtRepository.findByAllAtributes(user1.getId(), user2.getId(),group.getId()).isEmpty())
+                        if (debtRepository.findByGroupIdAndFirstUserIdAndSecondUserId(user1.getId(), user2.getId(),group.getId()) == null)
                             debtRepository.save(new Debt(user1.getId(), user2.getId(), group.getId()));
                 }
             });

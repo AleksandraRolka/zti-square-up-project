@@ -20,13 +20,10 @@ public class Debt {
     @Id
     @GeneratedValue(strategy = AUTO)
     private Long id;
-    @NotEmpty
     @Column(name="first_user_id")
     private Long firstUserId;
-    @NotEmpty
     @Column(name="second_user_id")
     private Long secondUserId;
-    @NotEmpty
     @Column(name="group_id")
     private Long groupId;
     private Double balance;

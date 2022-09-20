@@ -5,6 +5,11 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { config } from "../../../../services/header-service";
 import { getCurrentUser } from "../../../../services/auth-service";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Button from "react-bootstrap/Button";
+import { Link } from "react-router-dom";
 
 const GroupView = () => {
     const [currGroupName, setCurrGroupName] = useState("");
@@ -51,7 +56,33 @@ const GroupView = () => {
     return (
         <>
             <div className="main-panel-header">
-                <h5>{currGroupName}</h5>
+                <Container>
+                    <Row>
+                        <Col>
+                            <h5>{currGroupName}</h5>
+                        </Col>
+                        <Col md="auto">
+                            <Button
+                                className="main-dashboard-button button-add-expense"
+                                variant="warning"
+                                as={Link}
+                                to={`/addexpense`}
+                            >
+                                Add expense
+                            </Button>
+                        </Col>
+                        <Col xs lg="2">
+                            <Button
+                                className="main-dashboard-button button-settle-up"
+                                variant="info"
+                                as={Link}
+                                to={`/settleup`}
+                            >
+                                Settle up
+                            </Button>
+                        </Col>
+                    </Row>
+                </Container>
             </div>
         </>
     );

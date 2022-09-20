@@ -32,7 +32,6 @@ const ForDashboard = () => {
 
     useEffect(() => {
         user = getCurrentUser();
-        console.log(user);
         setCurrentUser(user);
         fetchUserBalance();
     }, []);

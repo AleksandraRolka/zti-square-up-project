@@ -35,16 +35,12 @@ public class BalanceController {
 
         Double owe = 0.0;
         Double owed = 0.0;
-        Double total = 0.0;
         if(obj.getIsReducing()) {
-            owe = currBalance.getOweAmount() + obj.getAmount();
-            owed = currBalance.getOwedAmount();
+            owed = obj.getAmount();
         } else {
-            owe = currBalance.getOweAmount();
-            owed = currBalance.getOwedAmount() + obj.getAmount();
+            owe = obj.getAmount();
         }
-        total = owed - owe;
-        balanceService.updateUserBalance(obj.getUser_id(), owe, owed, total);
+        balanceService.updateUserBalance(obj.getUser_id(), owe, owed);
         return ResponseEntity.ok().build();
     }
 }

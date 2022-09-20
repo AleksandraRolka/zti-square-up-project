@@ -1,12 +1,16 @@
 package com.server.service.impl;
 
 import com.server.api.utils.ExpenseFromJson;
+import com.server.models.Debt;
 import com.server.models.Expense;
 import com.server.models.Repayment;
 import com.server.models.Share;
+import com.server.repository.DebtRepository;
 import com.server.repository.ExpenseRepository;
 import com.server.repository.RepaymentRepository;
 import com.server.repository.ShareRepository;
+import com.server.service.BalanceService;
+import com.server.service.DebtService;
 import com.server.service.ExpenseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +31,9 @@ public class ExpenseServiceImpl implements ExpenseService {
     private final ExpenseRepository expenseRepository;
     private final RepaymentRepository repaymentRepository;
     private final ShareRepository shareRepository;
+    private final BalanceService balanceService;
+    private final DebtRepository debtRepository;
+    private final DebtService debtService;
 
     public Collection<Expense> getAll() {
         return expenseRepository.findAll();
@@ -91,5 +98,48 @@ public class ExpenseServiceImpl implements ExpenseService {
 
         log.info("Expense to save: {}", newExpense);
         expenseRepository.save(newExpense);
+
+        if(expenseObj.getIs_it_payment()) {
+            balanceService.updateUserBalance(
+                    paymentDetails.getFromUserId(),
+                    0.0,
+                    paymentDetails.getAmount());
+            balanceService.updateUserBalance(
+                    paymentDetails.getToUserId(),
+                    paymentDetails.getAmount(),
+                    0.0);
+
+            log.info("paymentDetails.getGroupId(): {}", paymentDetails.getGroupId());
+            log.info("paymentDetails.getFromUserId(): {}", paymentDetails.getFromUserId());
+            log.info("paymentDetails.getToUserId(): {}", paymentDetails.getToUserId());
+            log.info("paymentDetails.getAmount(): {}", paymentDetails.getAmount());
+            log.info("-----------------------------");
+            Debt usersDebtBetween = debtService.getByGroupIdAndUsersIds(paymentDetails.getGroupId(), paymentDetails.getFromUserId(), paymentDetails.getToUserId());
+            log.info("Current usersDebtBetween: {]", String.valueOf(usersDebtBetween));
+            log.info("paymentDetails.getGroupId(): {}", paymentDetails.getGroupId());
+            log.info("usersDebtBetween.getFirstUserId(): {}", usersDebtBetween.getFirstUserId());
+            log.info("usersDebtBetween.getSecondUserId(): {}", usersDebtBetween.getSecondUserId());
+            log.info("paymentDetails.getAmount(): {}", paymentDetails.getAmount());
+            debtRepository.updateByGroupIdAndFirstUserIdAndSecondUserId(paymentDetails.getGroupId(),
+                    usersDebtBetween.getFirstUserId(),
+                    usersDebtBetween.getSecondUserId(),
+                    paymentDetails.getAmount());
+        } else {
+            splitDetails.forEach(share -> {
+                balanceService.updateUserBalance(
+                        share.getWhoPaidId(),
+                        0.0,
+                        share.getAmount());
+                balanceService.updateUserBalance(
+                        share.getWhoOwesId(),
+                        share.getAmount(),
+                        0.0);
+                Debt usersDebt = debtService.getByGroupIdAndUsersIds(share.getGroupId(), share.getWhoPaidId(), share.getWhoOwesId());
+                debtRepository.updateByGroupIdAndFirstUserIdAndSecondUserId(share.getGroupId(),
+                        usersDebt.getFirstUserId(),
+                        usersDebt.getSecondUserId(),
+                        share.getAmount());
+            });
+        }
     }
 }

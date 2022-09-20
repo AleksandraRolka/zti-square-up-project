@@ -8,15 +8,14 @@ import { config } from "../../../services/header-service";
 import Multiselect from "multiselect-react-dropdown";
 
 const NewGroupForm = () => {
+    const [isInfo, setIsInfo] = useState(false);
+    const [info, setInfo] = useState("");
     const [allUsers, setAllUsers] = useState([]);
     const [groupName, setGroupName] = useState("");
     const [usersToAdd, setUsersToAdd] = useState([]);
     const [selectedOptions, setSelectedOptions] = useState([]);
     const [options, setOptions] = useState([]);
     let user = getCurrentUser();
-
-    const [isInfo, setIsInfo] = useState(false);
-    const [info, setInfo] = useState("");
 
     const navigate = useNavigate();
 

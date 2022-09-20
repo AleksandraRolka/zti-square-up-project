@@ -115,7 +115,7 @@ const NewExpenseForm = () => {
     return (
         <div className="new-group-form-div">
             <form onSubmit={handleSubmit}>
-                <h3>Create new group</h3>
+                <h3>New expense</h3>
                 {isInfo ? <p className="info-message">{info}</p> : <p />}
 
                 <div className="form-group">
