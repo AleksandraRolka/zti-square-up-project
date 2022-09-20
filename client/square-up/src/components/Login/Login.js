@@ -4,6 +4,8 @@ import PasswordChecklist from "react-password-checklist";
 import isEmail from "validator/lib/isEmail";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { parseJwt } from "../../services/auth-service.js";
+import { config } from "../../services/header-service.js";
 
 const Login = ({}) => {
     const [email, setEmail] = useState("");
@@ -35,10 +37,37 @@ const Login = ({}) => {
                 console.log("Refresh token: ", res.data.refresh_token);
                 localStorage.setItem("access_token", res.data.access_token);
                 localStorage.setItem("refresh_token", res.data.refresh_token);
+                const decodedJwt = parseJwt(res.data.access_token);
+                const currentUserEmail = decodedJwt.sub;
+                if (currentUserEmail) {
+                    axios({
+                        method: "post",
+                        url: "/api/user",
+                        headers: config(),
+                        data: { email: currentUserEmail },
+                    })
+                        .then((res) => {
+                            let currentUserData = {
+                                user_id: res.data.id,
+                                first_name: res.data.firstName,
+                                last_name: res.data.LastName,
+                                email: res.data.email,
+                                roles: res.data.roles,
+                            };
+                            localStorage.setItem(
+                                "user",
+                                JSON.stringify(currentUserData)
+                            );
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        });
+                }
                 setTimeout(() => {
                     setIsInfo(false);
-                    navigate("/");
-                }, 1000);
+                    window.location.reload();
+                    window.redirect("/");
+                }, 600);
             })
             .catch((error) => {
                 console.log(error);

@@ -1,6 +1,7 @@
 package com.server.api;
 
 import com.server.api.utils.CustomErrorMessage;
+import com.server.api.utils.Email;
 import com.server.api.utils.GroupWithMembersId;
 import com.server.api.utils.MembersList;
 import com.server.models.Group;
@@ -19,6 +20,7 @@ import java.util.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RequestMapping(path = "/api")
 public class GroupController {
     private final GroupService groupService;
@@ -61,4 +63,5 @@ public class GroupController {
     public ResponseEntity<Collection<Group>>getGroups() {
         return ResponseEntity.ok().body(groupService.getGroups());
     }
+
 }

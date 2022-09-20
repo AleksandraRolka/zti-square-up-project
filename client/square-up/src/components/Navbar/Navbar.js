@@ -8,7 +8,7 @@ const NavBar = ({ isLoggedIn }) => {
     return (
         <Navbar expand="lg" variant="light" bg="light" className="app-navbar">
             <Container className="app-navbar-container">
-                <Navbar.Brand href="">
+                <Navbar.Brand href="/dashboard">
                     <img
                         id="logo"
                         alt="Logo"

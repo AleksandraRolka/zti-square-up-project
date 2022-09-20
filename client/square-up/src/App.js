@@ -11,115 +11,54 @@ import {
     Routes,
 } from "react-router-dom";
 import "./App.css";
-import axios from "axios";
-import config from "./services/header-service.js";
-import { logout, getCurrentUser } from "./services/auth-service.js";
-import { useCallback } from "react";
+import {
+    clearLocalStorage,
+    useLocalStorage,
+    verifyTokenAndRefreshIfNeeded,
+    refetchUserInfoIfLost,
+} from "./services/auth-service.js";
+import NewGroupForm from "./components/Forms/NewGroupForm/NewGroupForm";
 
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [userEmail, setUserEmail] = useState("");
-    const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
-    // useState("");
-
-    function useLocalStorage(key, initialState) {
-        const [value, setValue] = useState(
-            localStorage.getItem(key) ?? initialState
-        );
-        const updatedSetValue = useCallback(
-            (newValue) => {
-                if (
-                    newValue === initialState ||
-                    typeof newValue === "undefined"
-                ) {
-                    localStorage.removeItem(key);
-                } else {
-                    localStorage.setItem(key, newValue);
-                }
-                setValue(newValue ?? initialState);
-            },
-            [initialState, key]
-        );
-        return [value, updatedSetValue];
-    }
+    const [accessToken, setAccessToken] = useLocalStorage("access_token", "");
+    const [currentUser, setCurrentUser] = useState(null);
 
     useEffect(() => {
         async function init() {
             const token = await localStorage.getItem("access_token");
             setAccessToken(token);
             if (token) {
-                console.log("I'm in if:");
+                verifyTokenAndRefreshIfNeeded();
                 setIsAuthenticated(true);
+                refetchUserInfoIfLost();
+                const user = JSON.parse(localStorage.getItem("user"));
+                if (user) setCurrentUser(user.user);
             } else {
-                console.log("I'm in else:");
                 setIsAuthenticated(false);
-                logout();
+                clearLocalStorage();
             }
         }
         init();
     }, [accessToken]);
 
-    // useEffect(() => {
-    //     async function init() {
-    //         const token = await localStorage.getItem("access_token");
-    //         setAccessToken(token);
-    //         if (token) {
-    //             console.log("I'm in if:");
-    //             setIsAuthenticated(true);
-    //         } else {
-    //             console.log("I'm in else:");
-    //             setIsAuthenticated(false);
-    //             logout();
-    //         }
-    //     }
-    //     init();
-    // }, [accessToken]);
+    function checkIfStillAuthenticated() {
+        if (isAuthenticated) {
+            const token = localStorage.getItem("access_token");
+            if (token) {
+                verifyTokenAndRefreshIfNeeded();
+                setIsAuthenticated(true);
+                refetchUserInfoIfLost();
+                const user = JSON.parse(localStorage.getItem("user"));
+                if (user) setCurrentUser(user.user);
+            } else {
+                setIsAuthenticated(false);
+                clearLocalStorage();
+            }
+        }
+    }
 
-    // useEffect(() => {
-    //     console.log("I'm in useEffect:");
-    //     let token = localStorage.getItem("access_token");
-    //     setAccessToken(accessToken);
-    //     console.log("token:", token);
-    //     if (token) {
-    //         console.log("I'm in if:");
-    //         setIsAuthenticated(true);
-    //         axios
-    //             .get("api/user", config)
-    //             .then((data) => {
-    //                 console.log(data);
-    //                 setIsAuthenticated(true);
-    //             })
-    //             .catch((err) => {
-    //                 console.log(err);
-    //                 setIsAuthenticated(false);
-    //                 logout();
-    //             });
-    //     } else {
-    //         console.log("I'm in else:");
-    //         setIsAuthenticated(false);
-    //         logout();
-    //     }
-    // }, [localStorage.getItem("access_token")]);
-
-    // useEffect(() => {
-    //     console.log("I'm in useEffect:");
-    //     function checkIfAuthenticated() {
-    //         const token = localStorage.getItem("access_token");
-    //         if (token) {
-    //             console.log("I'm in if:");
-    //             setIsAuthenticated(true);
-    //         } else {
-    //             console.log("I'm in else:");
-    //             setIsAuthenticated(false);
-    //             logout();
-    //         }
-    //     }
-    //     checkIfAuthenticated();
-    //     window.addEventListener("storage", checkIfAuthenticated);
-    //     return () => {
-    //         window.removeEventListener("storage", checkIfAuthenticated);
-    //     };
-    // }, []);
+    setInterval(checkIfStillAuthenticated, 150000);
 
     return (
         <BrowserRouter>
@@ -129,7 +68,11 @@ function App() {
                     exact
                     path="/"
                     element={
-                        isAuthenticated ? <Panel /> : <Redirect to="/login" />
+                        isAuthenticated ? (
+                            <Redirect to="/dashboard" />
+                        ) : (
+                            <Redirect to="/login" />
+                        )
                     }
                 />
                 <Route
@@ -149,6 +92,23 @@ function App() {
                     path="/register"
                     element={
                         isAuthenticated ? <Redirect to="/" /> : <Register />
+                    }
+                />
+                <Route
+                    exact
+                    path="/group/:id"
+                    element={isAuthenticated ? <Panel /> : <Redirect to="/" />}
+                />
+                <Route
+                    exact
+                    path="/expenses"
+                    element={isAuthenticated ? <Panel /> : <Redirect to="/" />}
+                />
+                <Route
+                    exact
+                    path="/addgroup"
+                    element={
+                        isAuthenticated ? <NewGroupForm /> : <Redirect to="/" />
                     }
                 />
             </Routes>

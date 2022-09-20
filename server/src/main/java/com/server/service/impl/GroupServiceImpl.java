@@ -115,17 +115,20 @@ public class GroupServiceImpl implements GroupService {
     }
 
     public Collection<Group> getUserGroups(Long id) {
-        log.info("Fetching grous by user id: {}.", id);
+        log.info("Fetching groups by user id: {}.", id);
         Collection<Group> allGroups = groupRepository.findAll();
         Collection<Group> userGroups = new ArrayList<>();
         allGroups.forEach(group -> {
             final boolean[] isUserInGroup = {false};
             group.getMembers().forEach(member -> {
-                if (member.getId() == id)
+                log.info("member.getId() ---------> {} ", member.getId());
+                if (member.getId() == id) {
                     isUserInGroup[0] = true;
+                }
             });
-            if (isUserInGroup[0] == true)
+            if (isUserInGroup[0] == true) {
                 userGroups.add(group);
+            }
         });
         return userGroups;
     }

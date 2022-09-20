@@ -20,7 +20,7 @@ import java.util.*;
 
 
 @Slf4j
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/api")
@@ -39,8 +39,9 @@ public class UserController {
         return ResponseEntity.ok().body(user);
     }
 
-    @GetMapping(path = "/user")
+    @PostMapping(path = "/user")
     public ResponseEntity<?> getUserByEmail(@RequestBody Email obj) {
+        log.info("Fetch user by email: {}", obj);
         log.info("Fetch user by email: {}", obj.getEmail());
         User user = userService.getUser(obj.getEmail());
         if(user == null)

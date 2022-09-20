@@ -1,0 +1,23 @@
+.main-layout-container {
+}
+
+.panel-row-container {
+    height: calc(100vh - 57px) !important;
+}
+
+.panel-column-container {
+}
+
+.left-panel-container {
+    height: calc(100vh - 57px) !important;
+}
+
+.main-panel-container {
+    box-shadow: 0 10px 36px rgba(98, 97, 97, 0.25),
+        0 10px 20px rgba(98, 97, 97, 0.25);
+    height: calc(100vh - 57px) !important;
+}
+
+.right-panel-container {
+    height: calc(100vh - 57px) !important;
+}

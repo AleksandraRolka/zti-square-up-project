@@ -72,12 +72,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public void addRoleToUser(String email, String roleName) {
         log.info("Adding role {} to user {}", roleName, email);
         User user = userRepository.findByEmail(email);
+        log.info("User: {}", user);
         Role role = roleRepository.findByName(roleName);
+        log.info("Role: {}", role);
         if ((role == null) & (user != null)) {
             log.error("Role not exist. Creating new one");
             role = new Role(null, roleName);
             saveRole(role);
-            user.getRoles().add(role);
+        }
+        if (user != null) {
+            log.info("Adding role {} to user");
+            Collection<Role> allRoles = new ArrayList<>(user.getRoles());
+            allRoles.add(role);
+            user.setRoles(allRoles);
         }
     }
 

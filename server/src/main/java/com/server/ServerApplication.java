@@ -34,10 +34,11 @@ public class ServerApplication {
 			userService.saveRole(admin);
 			userService.saveRole(ordUser);
 
-			userService.saveUser(new User("John", "Travolta", "johntravowlta@gmail.com", "pass123", List.of(new Role[]{ordUser})));
-			userService.saveUser(new User("Will", "Smith", "willsmith@gmail.com", "pass123", List.of(new Role[]{admin})));
-			userService.saveUser(new User("Jim", "Carry", "jimcarry@gmail.com", "pass123", new ArrayList<>()));
-			userService.saveUser(new User("Arnold", "Schwarzenegger", "arnoldschwarzenegger@gmail.com", "pass123", List.of(new Role[]{ordUser})));
+			userService.saveUser(new User("John", "Travolta", "johntravowlta@gmail.com", "Temp123!", List.of(new Role[]{ordUser})));
+			userService.saveUser(new User("Will", "Smith", "willsmith@gmail.com", "Temp123!", List.of(new Role[]{admin})));
+			userService.saveUser(new User("Jim", "Carry", "jimcarry@gmail.com", "Temp123!", new ArrayList<>()));
+			userService.saveUser(new User("Arnold", "Schwarzenegger", "arnoldschwarzenegger@gmail.com", "Temp123!", List.of(new Role[]{ordUser})));
+			userService.saveUser(new User("Aleksandra", "Rolka", "ar@op.pl", "Temp1!", List.of(new Role[]{ordUser})));
 		};
 	}
 }

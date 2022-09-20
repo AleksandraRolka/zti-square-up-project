@@ -32,8 +32,6 @@ const Register = ({}) => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log("here");
-
         const data = {
             first_name: firstName,
             last_name: lastName,
