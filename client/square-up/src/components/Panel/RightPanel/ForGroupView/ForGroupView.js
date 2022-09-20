@@ -46,9 +46,11 @@ const ForGroupView = () => {
     }
 
     function fetchAllUserDebts() {
+        path = window.location.pathname;
+        const id = path.substring("group/".length + 1);
         axios({
             method: "get",
-            url: `api/group/${currGroupId}/user/${user.user_id}/debt`,
+            url: `api/group/${id}/user/${user.user_id}/debt`,
             headers: config(),
         })
             .then((res) => {
@@ -85,7 +87,7 @@ const ForGroupView = () => {
                 </p>
             );
         } else {
-            return <p></p>;
+            return <></>;
         }
     }
 
