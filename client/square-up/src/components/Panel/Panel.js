@@ -7,7 +7,7 @@ import LeftPanel from "./LeftPanel/LeftPanel";
 import MainPanel from "./MainPanel/MainPanel";
 import RightPanel from "./RightPanel/RightPanel";
 import { getCurrentUser } from "../../services/auth-service";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 const Panel = () => {
     let user = getCurrentUser();

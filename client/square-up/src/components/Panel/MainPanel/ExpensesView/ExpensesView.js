@@ -86,11 +86,12 @@ const ExpensesView = () => {
         })[0];
     }
 
-    function getGroupInfo(id) {
+    function getGroupName(id) {
         console.log(allGroups);
-        return allGroups.filter((user) => {
+        let gr = allGroups.filter((user) => {
             return user.id == id;
         })[0];
+        if (gr) return gr.name;
     }
 
     function fetchGroups() {
@@ -184,11 +185,7 @@ const ExpensesView = () => {
                                         </Col>
                                         <Col xs={10}>
                                             <span className="group-name">
-                                                {
-                                                    getGroupInfo(
-                                                        expense.groupId
-                                                    ).name
-                                                }
+                                                {getGroupName(expense.groupId)}
                                             </span>
                                             <p className="expense-title">
                                                 {expense.title}

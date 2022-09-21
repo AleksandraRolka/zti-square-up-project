@@ -1,15 +1,9 @@
 import React from "react";
 import "./ForExpensesView.css";
-import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getCurrentUser } from "../../../../services/auth-service";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import axios from "axios";
 import { config } from "../../../../services/header-service";
-import Button from "react-bootstrap/Button";
-import { Link } from "react-router-dom";
 
 const ForExpensesView = () => {
     // const [currPath, setCurrPath] = useState("");

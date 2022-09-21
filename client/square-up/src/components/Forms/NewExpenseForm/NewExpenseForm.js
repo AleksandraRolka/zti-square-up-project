@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./NewExpenseForm.css";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { getCurrentUser } from "../../../services/auth-service";
 import { config } from "../../../services/header-service";
@@ -54,7 +54,7 @@ const NewExpenseForm = () => {
                 });
                 setAllUsers(users);
                 let allOptions = [];
-                users.forEach((user) => {
+                groupMembers.forEach((user) => {
                     allOptions.push({
                         value: user.id,
                         name: user.firstName + " " + user.lastName,
@@ -188,6 +188,7 @@ const NewExpenseForm = () => {
                         onChange={(e) => {
                             console.log("Selected groups change..");
                             setSelectedGroup(parseInt(e.target.value));
+
                             setGroupMembersBySelecetedGroupId(
                                 parseInt(e.target.value)
                             );
