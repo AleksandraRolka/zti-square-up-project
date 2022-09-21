@@ -66,7 +66,11 @@ const ForGroupView = () => {
             let debt = allUserDebts.filter((debt) => {
                 return debt.secondUserId == id;
             });
-            if (debt) return debt.at(0).balance.toFixed(2);
+            if (debt === undefined) {
+                <spsn></spsn>;
+            } else {
+                return debt.at(0).balance.toFixed(2);
+            }
         }
     }
 
@@ -90,12 +94,6 @@ const ForGroupView = () => {
             return <></>;
         }
     }
-
-    useEffect(() => {
-        user = getCurrentUser();
-        fetchGroupInfo();
-        fetchAllUserDebts();
-    }, []);
 
     return (
         <>

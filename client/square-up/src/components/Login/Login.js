@@ -9,6 +9,7 @@ import { config } from "../../services/header-service.js";
 
 const Login = ({}) => {
     const [email, setEmail] = useState("");
+    const [surrUserId, setCurrUserId] = useState(null);
     const [password, setPassword] = useState("");
     const [isPasswordValid, setIsPasswordValid] = useState(false);
     const [isEmailValid, setIsEmailValid] = useState(false);
@@ -16,6 +17,7 @@ const Login = ({}) => {
         useState(false);
     const [isInfo, setIsInfo] = useState(false);
     const [info, setInfo] = useState("");
+    const [currUser, setCurrentUser] = useState({});
 
     const navigate = useNavigate();
 
@@ -39,31 +41,20 @@ const Login = ({}) => {
                 localStorage.setItem("refresh_token", res.data.refresh_token);
                 const decodedJwt = parseJwt(res.data.access_token);
                 const currentUserEmail = decodedJwt.sub;
-                if (currentUserEmail) {
-                    axios({
-                        method: "post",
-                        url: "/api/user",
-                        headers: config(),
-                        data: { email: currentUserEmail },
-                    })
-                        .then((res) => {
-                            console.log(res.data);
-                            let currentUserData = {
-                                user_id: res.data.id,
-                                first_name: res.data.firstName,
-                                last_name: res.data.lastName,
-                                email: res.data.email,
-                                roles: res.data.roles,
-                            };
-                            localStorage.setItem(
-                                "user",
-                                JSON.stringify(currentUserData)
-                            );
-                        })
-                        .catch((error) => {
-                            console.log(error);
-                        });
-                }
+                setEmail(currentUserEmail);
+                // if (currentUserEmail) {
+                //     let currentUserData = {
+                //         user_id: null,
+                //         first_name: null,
+                //         last_name: null,
+                //         email: currentUserEmail,
+                //         roles: [],
+                //     };
+                //     localStorage.setItem(
+                //         "user",
+                //         JSON.stringify(currentUserData)
+                //     );
+                // }
                 setTimeout(() => {
                     setIsInfo(false);
                     window.location.reload();
@@ -77,6 +68,28 @@ const Login = ({}) => {
                 setTimeout(() => {
                     setIsInfo(false);
                 }, 2000);
+            });
+        axios({
+            method: "post",
+            url: "/api/user",
+            headers: config(),
+            data: { email: email },
+        })
+            .then((res) => {
+                console.log(res.data);
+                setCurrUserId(res.data.id);
+                const currentUserData = {
+                    user_id: res.data.id,
+                    first_name: res.data.firstName,
+                    last_name: res.data.lastName,
+                    email: res.data.email,
+                    roles: res.data.roles,
+                };
+                setCurrentUser(currentUserData);
+                localStorage.setItem("user", JSON.stringify(currentUserData));
+            })
+            .catch((error) => {
+                console.log(error);
             });
     };
 

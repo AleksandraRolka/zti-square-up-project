@@ -91,6 +91,20 @@ const GroupView = () => {
             return user.id == id;
         })[0];
     }
+    function getUserName(id) {
+        let gr = allUsers.filter((user) => {
+            return user.id == id;
+        })[0];
+        if (gr) return gr.firstName;
+    }
+
+    function getGroupName(id) {
+        console.log(allGroupRelatedExpenses);
+        let gr = allGroupRelatedExpenses.filter((user) => {
+            return user.id == id;
+        })[0];
+        if (gr) return gr.name;
+    }
 
     function getAllAmountLentByUser(userId, expense) {
         let sum = 0.0;
@@ -113,8 +127,7 @@ const GroupView = () => {
             fromUserId == user.user_id
                 ? "You"
                 : getUserInfo(fromUserId).firstName;
-        let to =
-            toUserId == user.user_id ? "you" : getUserInfo(toUserId).firstName;
+        let to = toUserId == user.user_id ? "you" : getUserName(toUserId);
         return from + " transfered money to " + to + ".";
     }
 
@@ -228,11 +241,14 @@ const GroupView = () => {
                                                 </>
                                             ) : (
                                                 <p className="paid-by-info">
-                                                    {
+                                                    {/* {
                                                         getUserInfo(
                                                             expense.paidBy
                                                         ).firstName
-                                                    }{" "}
+                                                    }{" "} */}
+                                                    {getGroupName(
+                                                        expense.groupId
+                                                    )}
                                                     paid
                                                 </p>
                                             )}

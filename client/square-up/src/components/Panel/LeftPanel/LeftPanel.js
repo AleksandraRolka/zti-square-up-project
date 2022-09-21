@@ -16,22 +16,23 @@ const LeftPanel = ({ user }) => {
 
     function fetchUserGroups() {
         user = getCurrentUser();
-        axios({
-            method: "get",
-            url: `api/user/${user.user_id}/groups`,
-            headers: config(),
-        })
-            .then((res) => {
-                let userGroups = res.data;
-                setGroups(userGroups);
+        if (user != null) {
+            axios({
+                method: "get",
+                url: `api/user/${user.user_id}/groups`,
+                headers: config(),
             })
-            .catch((error) => {
-                console.log(error);
-            });
+                .then((res) => {
+                    let userGroups = res.data;
+                    setGroups(userGroups);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
     }
 
     useEffect(() => {
-        user = getCurrentUser();
         fetchUserGroups();
     }, []);
 

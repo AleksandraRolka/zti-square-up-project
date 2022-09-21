@@ -85,6 +85,19 @@ const NewExpenseForm = () => {
                         }
                     );
                     setGroupMembers(groupMembersWithOutCurrent);
+                    let allOptions = [];
+                    groupMembersWithOutCurrent.forEach((user) => {
+                        allOptions.push({
+                            value: user.id,
+                            name: user.firstName + " " + user.lastName,
+                            // +
+                            // " (" +
+                            // user.email +
+                            // ")",
+                            id: user.id,
+                        });
+                        setOptions(allOptions);
+                    });
                 }
             });
         }
