@@ -1,3 +1,3 @@
-# zti-square-up-project
-https://docs.google.com/viewer?url=${https://github.com/AleksandraRolka/zti-square-up-project/blob/master/doc/Dokumentacja.pdf}
-[Documentation](/doc/Dokumentacja.pdf).
+# ZTI university course projest: SquareUp app
+
+[Project doc](/doc/Dokumentacja.pdf)
